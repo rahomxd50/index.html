@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>زر الصوت الدائري</title>
+    <title>زر الصوت التفاعلي</title>
     <style>
         body {
-            /* خلفية بيضاء */
             background: #ffffff; 
             display: flex;
             justify-content: center;
@@ -16,24 +15,23 @@
             font-family: sans-serif;
         }
         #soundBtn {
-            /* زر دائري */
-            width: 200px;         /* عرض الزر */
-            height: 200px;        /* ارتفاع الزر (يساوي العرض عشان يصير دائرة) */
+            width: 200px;
+            height: 200px;
             font-size: 24px;
-            background: #ff4757;  /* لون الزر أحمر */
-            color: white;         /* لون النص أبيض */
+            /* اللون الافتراضي: أحمر */
+            background: #ff4757;  
+            color: white;
             border: none;
-            border-radius: 50%;   /* هذا هو السر: 50% تخلي الشكل دائرة */
+            border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* ظل خفيف للجمالية */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             font-weight: bold;
-            transition: all 0.2s ease; /* حركة نعومة عند الضغط */
+            transition: background 0.3s ease, transform 0.1s ease;
             text-align: center;
             line-height: 1.2;
         }
         #soundBtn:active {
-            transform: scale(0.95); /* يصغر شوي عند الضغط */
-            background: #e84118;    /* يغمق اللون شوي عند الضغط */
+            transform: scale(0.95);
         }
     </style>
 </head>
@@ -42,7 +40,7 @@
     <!-- الزر الدائري -->
     <button id="soundBtn">اضغط هنا<br>للصوت 🎵</button>
 
-    <!-- ملف الصوت (تأكد أن اسم الملف مطابق تماماً لما رفعته) -->
+    <!-- ملف الصوت -->
     <audio id="myAudio" src="anime ahh.mp3" preload="auto"></audio>
 
     <script>
@@ -50,11 +48,22 @@
         const audio = document.getElementById('myAudio');
 
         btn.addEventListener('click', function() {
+            // إعادة الصوت من البداية لو ضغط عليه وهو شغال
             audio.currentTime = 0;
-            audio.play().catch(function(error) {
+            
+            audio.play().then(() => {
+                // أول ما يبدأ الصوت، تحول لونه إلى الأزرق
+                btn.style.background = '#2ed573'; // حطيت لك أخضر فريش، أو تقدر تخليه أزرق #1e90ff
+                btn.innerText = "شغال... 🔊";
+            }).catch(function(error) {
                 console.error("تعذر تشغيل الصوت:", error);
-                alert("تأكد من رفع ملف الصوت 'anime ahh.mp3' في نفس المجلد.");
             });
+        });
+
+        // أول ما ينتهي الصوت تماماً، يرجع الزر لونه أحمر وشكله الأصلي
+        audio.addEventListener('ended', function() {
+            btn.style.background = '#ff4757'; // يرجع أحمر
+            btn.innerText = "اضغط هنا\nللصوت 🎵";
         });
     </script>
 
