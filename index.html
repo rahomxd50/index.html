@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>زر الصوت</title>
+    <title>زر الصوت الدائري</title>
     <style>
         body {
-            background: #111;
+            /* خلفية بيضاء */
+            background: #ffffff; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -14,28 +15,34 @@
             margin: 0;
             font-family: sans-serif;
         }
-        button {
-            padding: 30px 60px;
-            font-size: 28px;
-            background: #ff4757;
-            color: white;
+        #soundBtn {
+            /* زر دائري */
+            width: 200px;         /* عرض الزر */
+            height: 200px;        /* ارتفاع الزر (يساوي العرض عشان يصير دائرة) */
+            font-size: 24px;
+            background: #ff4757;  /* لون الزر أحمر */
+            color: white;         /* لون النص أبيض */
             border: none;
-            border-radius: 15px;
+            border-radius: 50%;   /* هذا هو السر: 50% تخلي الشكل دائرة */
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* ظل خفيف للجمالية */
             font-weight: bold;
+            transition: all 0.2s ease; /* حركة نعومة عند الضغط */
+            text-align: center;
+            line-height: 1.2;
         }
-        button:active {
-            transform: scale(0.95);
+        #soundBtn:active {
+            transform: scale(0.95); /* يصغر شوي عند الضغط */
+            background: #e84118;    /* يغمق اللون شوي عند الضغط */
         }
     </style>
 </head>
 <body>
 
-    <!-- زر واحد مرتب -->
-    <button id="soundBtn">اضغط هنا لتحصل على ايفون 50 و صناعي روسي 🎵</button>
+    <!-- الزر الدائري -->
+    <button id="soundBtn">اضغط هنا<br>للصوت 🎵</button>
 
-    <!-- ملف الصوت (تأكد أن اسم الملف مطابق تماماً بدون أخطاء) -->
+    <!-- ملف الصوت (تأكد أن اسم الملف مطابق تماماً لما رفعته) -->
     <audio id="myAudio" src="anime ahh.mp3" preload="auto"></audio>
 
     <script>
@@ -46,6 +53,7 @@
             audio.currentTime = 0;
             audio.play().catch(function(error) {
                 console.error("تعذر تشغيل الصوت:", error);
+                alert("تأكد من رفع ملف الصوت 'anime ahh.mp3' في نفس المجلد.");
             });
         });
     </script>
