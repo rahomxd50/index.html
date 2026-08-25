@@ -3,32 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>زر الصوت التفاعلي</title>
+    <title>زر الصوت والخلفية</title>
     <style>
         body {
-            background: #ffffff; 
+            /* خلفية بيضاء نفس الصورة */
+            background: #eef0f3; 
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: sans-serif;
+            overflow: hidden;
+            position: relative;
         }
+
+        /* تصميم النجوم في الخلفية */
+        .star {
+            position: absolute;
+            background-color: #1a2536; /* لون كحلي غامق نفس الصورة */
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            opacity: 0.85;
+        }
+
+        /* الزر الدائري في المنتصف */
         #soundBtn {
             width: 200px;
             height: 200px;
             font-size: 24px;
-            /* اللون الافتراضي: أحمر */
             background: #ff4757;  
             color: white;
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             font-weight: bold;
             transition: background 0.3s ease, transform 0.1s ease;
             text-align: center;
             line-height: 1.2;
+            z-index: 10; /* عشان يصير الزر فوق النجوم وما يختفي تحتها */
         }
         #soundBtn:active {
             transform: scale(0.95);
@@ -36,6 +49,14 @@
     </style>
 </head>
 <body>
+
+    <!-- خلفية النجوم (تتوزع تلقائياً) -->
+    <div class="star" style="top: 10%; left: 15%; width: 90px; height: 90px; transform: rotate(-15deg);"></div>
+    <div class="star" style="top: 12%; right: 12%; width: 65px; height: 65px; transform: rotate(10deg);"></div>
+    <div class="star" style="top: 40%; left: 8%; width: 85px; height: 85px; transform: rotate(25deg);"></div>
+    <div class="star" style="top: 35%; right: 18%; width: 75px; height: 75px; transform: rotate(-10deg);"></div>
+    <div class="star" style="bottom: 25%; left: 25%; width: 70px; height: 70px; transform: rotate(15deg);"></div>
+    <div class="star" style="bottom: 10%; right: 10%; width: 110px; height: 110px; transform: rotate(-20deg);"></div>
 
     <!-- الزر الدائري -->
     <button id="soundBtn">اضغط هنا<br>للصوت 🎵</button>
@@ -48,21 +69,17 @@
         const audio = document.getElementById('myAudio');
 
         btn.addEventListener('click', function() {
-            // إعادة الصوت من البداية لو ضغط عليه وهو شغال
             audio.currentTime = 0;
-            
             audio.play().then(() => {
-                // أول ما يبدأ الصوت، تحول لونه إلى الأزرق
-                btn.style.background = '#2ed573'; // حطيت لك أخضر فريش، أو تقدر تخليه أزرق #1e90ff
+                btn.style.background = '#2ed573'; // يقلب أخضر أثناء التشغيل
                 btn.innerText = "شغال... 🔊";
             }).catch(function(error) {
                 console.error("تعذر تشغيل الصوت:", error);
             });
         });
 
-        // أول ما ينتهي الصوت تماماً، يرجع الزر لونه أحمر وشكله الأصلي
         audio.addEventListener('ended', function() {
-            btn.style.background = '#ff4757'; // يرجع أحمر
+            btn.style.background = '#ff4757'; // يرجع أحمر لما ينتهي
             btn.innerText = "اضغط هنا\nللصوت 🎵";
         });
     </script>
