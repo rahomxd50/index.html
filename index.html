@@ -2,50 +2,29 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>زر الصوت</title>
-    <style>
-        body {
-            background: #111;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        button {
-            padding: 30px 60px;
-            font-size: 28px;
-            background: #ff4757;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-    </style>
 </head>
-<body>
+<body style="background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;">
 
-    <button id="btn">اضغط هنا للصوت 🎵</button>
+    <!-- الزر -->
+    <button id="soundBtn" style="padding: 30px 60px; font-size: 28px; background: #ff4757; color: white; border: none; border-radius: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">اضغط هنا للصوت 🎵</button>
 
-    <audio id="snd" src="anime-ahh.mp3" preload="auto"></audio>
+    <!-- عنصر الصوت -->
+    <!-- تأكد أن الملف في نفس المجلد واسمه مطابق حرفياً -->
+    <audio id="myAudio" src="anime ahh.mp3"></audio>
 
     <script>
-        const b = document.getElementById("btn");
-        const s = document.getElementById("snd");
+        const btn = document.getElementById('soundBtn');
+        const audio = document.getElementById('myAudio');
 
-        b.addEventListener("click", async () => {
-            try {
-                s.currentTime = 0;
-                await s.play();
-            } catch (error) {
-                console.error("فشل تشغيل الصوت:", error);
-            }
+        btn.addEventListener('click', function() {
+            // إعادة الصوت من البداية في كل ضغطة
+            audio.currentTime = 0;
+            audio.play().catch(function(error) {
+                console.error("تعذر تشغيل الصوت، قد يحتاج المتصفح لتفاعل سابق:", error);
+                alert("اضغط على الصفحة أولاً أو تحقق من ملف الصوت.");
+            });
         });
     </script>
 
