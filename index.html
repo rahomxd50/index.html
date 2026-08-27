@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaos Party Sound</title>
+    <title>Continuous Chaos Party</title>
     <style>
         body {
             background: #111;
@@ -17,7 +17,7 @@
             position: relative;
         }
 
-        /* الزر الدائري */
+        /* الزر الدائري في المنتصف */
         #soundBtn {
             width: 200px;
             height: 200px;
@@ -38,23 +38,26 @@
             transform: scale(0.95);
         }
 
-            /* الأشكال العشوائية (نجوم، مربعات، مثلثات) اللي تطير برا الشاشة */
+        /* الأشكال التي تتحرك بكل مكان بعشوائية */
         .chaos-shape {
             position: absolute;
-            top: 50%;
-            left: 50%;
             pointer-events: none;
-            animation: explode 1.2s forwards ease-out;
+            animation: moveAround linear infinite;
         }
 
-        /* حركة الطيران العشوائي والدوران والخروج برا الشاشة */
-        @keyframes explode {
+        @keyframes moveAround {
             0% {
-                transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+                transform: translate(var(--start-x), var(--start-y)) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
                 opacity: 1;
             }
             100% {
-                transform: translate(var(--end-x), var(--end-y)) scale(1.5) rotate(var(--rot));
+                transform: translate(var(--end-x), var(--end-y)) rotate(var(--rot)) scale(1.2);
                 opacity: 0;
             }
         }
@@ -69,59 +72,59 @@
     <script>
         const btn = document.getElementById('soundBtn');
         const audio = document.getElementById('myAudio');
+        let chaosInterval = null;
 
-        function createChaos() {
-            // عدد الأشكال اللي تنرمي بكل ضغطة (فوضى عارمة)
-            const totalShapes = 40;
+        function spawnShape() {
+            const shape = document.createElement('div');
+            shape.classList.add('chaos-shape');
+
+            const type = Math.floor(Math.random() * 3); // 0: مربع، 1: مثلث، 2: نجمة
+            const size = Math.random() * 45 + 20; 
             const colors = ['#ff0055', '#00ffcc', '#ff00ff', '#ffff00', '#00ffff', '#ff6b81', '#70a1ff'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-            for (let i = 0; i < totalShapes; i++) {
-                const shape = document.createElement('div');
-                shape.classList.add('chaos-shape');
+            shape.style.width = `${size}px`;
+            shape.style.height = `${size}px`;
 
-                // اختيار عشوائي للشكل (مربع، مثلث، أو نجمة)
-                const type = Math.floor(Math.random() * 3);
-                const size = Math.random() * 40 + 20; // حجم عشوائي
-                shape.style.width = `${size}px`;
-                shape.style.height = `${size}px`;
-                shape.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-                if (type === 0) {
-                    // مربع
-                    shape.style.borderRadius = '0%';
-                } else if (type === 1) {
-                    // مثلث
-                    shape.style.backgroundColor = 'transparent';
-                    shape.style.width = '0';
-                    shape.style.height = '0';
-                    shape.style.borderLeft = `${size / 2}px solid transparent`;
-                    shape.style.borderRight = `${size / 2}px solid transparent`;
-                    shape.style.borderBottom = `${size}px solid ${colors[Math.floor(Math.random() * colors.length)]}`;
-                } else {
-                    // نجمة
-                    shape.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
-                }
-
-                // إحداثيات عشوائية تخلي الأشكال تروح برا الشاشة تماماً بكل الاتجاهات
-                const destinationX = (Math.random() - 0.5) * window.innerWidth * 1.5;
-                const destinationY = (Math.random() - 0.5) * window.innerHeight * 1.5;
-                const rotation = Math.random() * 720 - 360; // دوران عشوائي سريع
-
-                shape.style.setProperty('--end-x', `${destinationX}px`);
-                shape.style.setProperty('--end-y', `${destinationY}px`);
-                shape.style.setProperty('--rot', `${rotation}deg`);
-
-                // مدة الحركة عشوائية عشان تصير فوضى حقيقية
-                const duration = Math.random() * 0.6 + 0.8;
-                shape.style.animationDuration = `${duration}s`;
-
-                document.body.appendChild(shape);
-
-                // حذف العنصر بعد ما يخلص الحركة عشان ما يعلق الموقع
-                setTimeout(() => {
-                    shape.remove();
-                }, duration * 1000);
+            if (type === 0) {
+                // مربع
+                shape.style.backgroundColor = randomColor;
+                shape.style.borderRadius = '4px';
+            } else if (type === 1) {
+                // مثلث
+                shape.style.width = '0';
+                shape.style.height = '0';
+                shape.style.borderLeft = `${size / 2}px solid transparent`;
+                shape.style.borderRight = `${size / 2}px solid transparent`;
+                shape.style.borderBottom = `${size}px solid ${randomColor}`;
+            } else {
+                // نجمة
+                shape.style.backgroundColor = randomColor;
+                shape.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
             }
+
+            // إحداثيات ظهور عشوائية من أي مكان بالشاشة وانطلاقها لكل مكان
+            const startX = Math.random() * window.innerWidth;
+            const startY = Math.random() * window.innerHeight;
+            const endX = startX + (Math.random() - 0.5) * window.innerWidth * 1.5;
+            const endY = startY + (Math.random() - 0.5) * window.innerHeight * 1.5;
+            const rotation = Math.random() * 1080 - 540; // دوران مجنون
+
+            shape.style.setProperty('--start-x', `${startX}px`);
+            shape.style.setProperty('--start-y', `${startY}px`);
+            shape.style.setProperty('--end-x', `${endX}px`);
+            shape.style.setProperty('--end-y', `${endY}px`);
+            shape.style.setProperty('--rot', `${rotation}deg`);
+
+            const duration = Math.random() * 1.5 + 1; // سرعة الحركة
+            shape.style.animationDuration = `${duration}s`;
+
+            document.body.appendChild(shape);
+
+            // حذف الشكل بعد انتهاء حركته لتنظيف الذاكرة
+            setTimeout(() => {
+                shape.remove();
+            }, duration * 1000);
         }
 
         btn.addEventListener('click', function() {
@@ -129,16 +132,22 @@
             
             audio.play().then(() => {
                 btn.style.background = '#2ed573';
-                btn.innerText = "Chaos! 🔥";
-                
-                // إطلاق الفوضى والأشكال الطائرة
-                createChaos();
+                btn.innerText = "Partying! 🔥";
+
+                // إذا كان فيه حلقة قديمة شغالّة نلغيها عشان ما تتلخبط
+                if (chaosInterval) clearInterval(chaosInterval);
+
+                // استمرار توليد الأشكال بعشوائية طول فترة تشغيل الأغنية (كل 100 ميلي ثانية شكل جديد)
+                chaosInterval = setInterval(spawnShape, 100);
+
             }).catch(function(error) {
                 console.error("Playback error:", error);
             });
         });
 
+        // أول ماتخلص الأغنية يوقف توليد الأشكال ويرجع الزر لوضعه الطبيعي
         audio.addEventListener('ended', function() {
+            clearInterval(chaosInterval);
             btn.style.background = '#ff4757';
             btn.innerText = "Click for Chaos\nand Audio 💥";
         });
