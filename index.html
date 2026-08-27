@@ -3,178 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extreme Chaos Party</title>
+    <title>Ultimate Chaos Party Sound Button</title>
     <style>
+        :root {
+            --bg-color: #111;
+            --text-color: #fff;
+        }
+
         body {
-            background: #111;
+            background: var(--bg-color);
+            color: var(--text-color);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
             overflow: hidden;
             position: relative;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s ease;
         }
 
+        /* تأثير اهتزاز الشاشة عند الضغط */
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-10px, 10px); }
+            40% { transform: translate(10px, -10px); }
+            60% { transform: translate(-5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .shake-screen {
+            animation: shake 0.3s ease;
+        }
+
+        /* الزر الرئيسي */
         #soundBtn {
             width: 200px;
             height: 200px;
-            font-size: 22px;
+            font-size: 20px;
             background: #ff4757;  
             color: white;
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
             font-weight: bold;
-            transition: transform 0.1s ease, background 0.3s ease;
-            text-align: center;
-            line-height: 1.3;
             z-index: 100;
+            box-shadow: 0 0 25px rgba(255,255,255,0.3);
+            transition: transform 0.1s ease, background 0.3s ease;
         }
         #soundBtn:active {
             transform: scale(0.95);
         }
 
-        /* الأشكال المتحركة السريعة في كل مكان */
-        .chaos-shape {
+        /* عداد الضغطات وتغيير الثيم */
+        .ui-panel {
             position: absolute;
-            pointer-events: none;
-            animation: moveAround linear infinite;
-        }
-
-        @keyframes moveAround {
-            0% {
-                transform: translate(var(--start-x), var(--start-y)) rotate(0deg) scale(0.5);
-                opacity: 0;
-            }
-            15% {
-                opacity: 1;
-            }
-            85% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--end-x), var(--end-y)) rotate(var(--rot)) scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        /* الورد الثابتة التي تلف في مكانها وتختفي */
-        .static-flower {
-            position: absolute;
-            pointer-events: none;
-            animation: flowerFadeRotate linear forwards;
+            top: 20px;
             display: flex;
-            justify-content: center;
+            gap: 15px;
+            z-index: 100;
             align-items: center;
         }
 
-        @keyframes flowerFadeRotate {
-            0% {
-                opacity: 0;
-                transform: scale(0.2) rotate(0deg);
-            }
-            20% {
-                opacity: 1;
-                transform: scale(1) rotate(180deg);
-            }
-            80% {
-                opacity: 1;
-                transform: scale(1) rotate(540deg);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.2) rotate(720deg);
-            }
+        .counter-badge, .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* شريط التحكم بالصوت أسفل الشاشة */
+        .volume-container {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .volume-container input[type="range"] {
+            cursor: pointer;
+            accent-color: #ff4757;
+        }
+
+        /* الأشكال والورود */
+        .shape {
+            position: absolute;
+            pointer-events: none;
+            animation: fly linear infinite;
+        }
+        @keyframes fly {
+            0% { transform: translate(var(--sx), var(--sy)) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translate(var(--ex), var(--ey)) rotate(var(--rot)); opacity: 0; }
+        }
+        .flower {
+            position: absolute;
+            pointer-events: none;
+            animation: bloom linear forwards;
+        }
+        @keyframes bloom {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            30% { transform: scale(1) rotate(180deg); opacity: 1; }
+            70% { transform: scale(1) rotate(360deg); opacity: 1; }
+            100% { transform: scale(0) rotate(720deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <button id="soundBtn">Click for Extreme Chaos<br>and Audio 🌸💥</button>
+    <!-- لوحة العداد وزر الثيم -->
+    <div class="ui-panel">
+        <div class="counter-badge" id="counterBadge">Clicks: 0</div>
+        <button class="control-btn" id="themeBtn">☀️ Light Mode</button>
+    </div>
 
+    <!-- زر الصوت الرئيسي -->
+    <button id="soundBtn">Click Me! 💥</button>
     <audio id="myAudio" src="anime ahh.mp3" preload="auto"></audio>
+
+    <!-- شريط التحكم بالصوت -->
+    <div class="volume-container">
+        <span>🔊 Volume:</span>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+    </div>
 
     <script>
         const btn = document.getElementById('soundBtn');
         const audio = document.getElementById('myAudio');
-        let chaosInterval = null;
-        let flowerInterval = null;
+        const counterBadge = document.getElementById('counterBadge');
+        const themeBtn = document.getElementById('themeBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        
+        let clickCount = 0;
+        let timer1, timer2;
+        let isLightMode = false;
 
-        function spawnShape() {
-            const shape = document.createElement('div');
-            shape.classList.add('chaos-shape');
+        // ميزة 1: التحكم بمستوى الصوت
+        volumeSlider.addEventListener('input', function() {
+            audio.volume = volumeSlider.value;
+        });
 
-            const type = Math.floor(Math.random() * 3);
-            const size = Math.random() * 50 + 25; 
-            const colors = ['#ff0055', '#00ffcc', '#ff00ff', '#ffff00', '#00ffff', '#ff6b81', '#70a1ff', '#ff9f43'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-            shape.style.width = `${size}px`;
-            shape.style.height = `${size}px`;
-
-            if (type === 0) {
-                shape.style.backgroundColor = randomColor;
-                shape.style.borderRadius = '6px';
-            } else if (type === 1) {
-                shape.style.width = '0';
-                shape.style.height = '0';
-                shape.style.borderLeft = `${size / 2}px solid transparent`;
-                shape.style.borderRight = `${size / 2}px solid transparent`;
-                shape.style.borderBottom = `${size}px solid ${randomColor}`;
+        // ميزة 2: زر تغيير الوضع (فاتح / مظلم)
+        themeBtn.addEventListener('click', function() {
+            isLightMode = !isLightMode;
+            if (isLightMode) {
+                document.documentElement.style.setProperty('--bg-color', '#f5f6fa');
+                document.documentElement.style.setProperty('--text-color', '#2f3640');
+                themeBtn.innerText = "🌙 Dark Mode";
+                themeBtn.style.background = "rgba(0, 0, 0, 0.1)";
+                themeBtn.style.color = "#2f3640";
             } else {
-                shape.style.backgroundColor = randomColor;
-                shape.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+                document.documentElement.style.setProperty('--bg-color', '#111');
+                document.documentElement.style.setProperty('--text-color', '#fff');
+                themeBtn.innerText = "☀️ Light Mode";
+                themeBtn.style.background = "rgba(255, 255, 255, 0.1)";
+                themeBtn.style.color = "#fff";
             }
+        });
 
-            const startX = Math.random() * window.innerWidth;
-            const startY = Math.random() * window.innerHeight;
-            const endX = startX + (Math.random() - 0.5) * window.innerWidth * 1.8;
-            const endY = startY + (Math.random() - 0.5) * window.innerHeight * 1.8;
-            const rotation = Math.random() * 1440 - 720; 
+        // الحدث عند ضغط زر الصوت الرئيسي
+        btn.addEventListener('click', function() {
+            audio.currentTime = 0;
+            audio.play().then(() => {
+                btn.style.background = '#2ed573';
+                btn.innerText = "Party! 🔥";
+            }).catch(e => {
+                console.log("Audio play error:", e);
+                alert("Error playing audio. Make sure 'anime ahh.mp3' is uploaded in GitHub.");
+            });
 
-            shape.style.setProperty('--start-x', `${startX}px`);
-            shape.style.setProperty('--start-y', `${startY}px`);
-            shape.style.setProperty('--end-x', `${endX}px`);
-            shape.style.setProperty('--end-y', `${endY}px`);
-            shape.style.setProperty('--rot', `${rotation}deg`);
+            // ميزة 3: عداد الضغطات
+            clickCount++;
+            counterBadge.innerText = `Clicks: ${clickCount}`;
 
-            // حركة أسرع بكثير
-            const duration = Math.random() * 0.6 + 0.4; 
-            shape.style.animationDuration = `${duration}s`;
-
-            document.body.appendChild(shape);
-
+            // ميزة 4: اهتزاز الشاشة مع كل ضغطة
+            document.body.classList.add('shake-screen');
             setTimeout(() => {
-                shape.remove();
-            }, duration * 1000);
-        }
+                document.body.classList.remove('shake-screen');
+            }, 300);
 
-        function spawnFlower() {
-            const flower = document.createElement('div');
-            flower.classList.add('static-flower');
-            flower.innerHTML = '🌸'; // إيموجي وردة جميلة
+            if (timer1) clearInterval(timer1);
+            if (timer2) clearInterval(timer2);
 
-            const size = Math.random() * 30 + 30; // حجم الوردة
-            flower.style.fontSize = `${size}px`;
+            // توليد الأشكال السريعة والفوضوية
+            timer1 = setInterval(() => {
+                const el = document.createElement('div');
+                el.className = 'shape';
+                const size = Math.random() * 40 + 20;
+                el.style.width = size + 'px';
+                el.style.height = size + 'px';
+                
+                const colors = ['#ff0055', '#00ffcc', '#ffff00', '#ff00ff', '#00ffff'];
+                el.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                const sx = Math.random() * window.innerWidth;
+                const sy = Math.random() * window.innerHeight;
+                el.style.setProperty('--sx', sx + 'px');
+                el.style.setProperty('--sy', sy + 'px');
+                el.style.setProperty('--ex', (sx + (Math.random() - 0.5) * 1000) + 'px');
+                el.style.setProperty('--ey', (sy + (Math.random() - 0.5) * 1000) + 'px');
+                el.style.setProperty('--rot', (Math.random() * 720) + 'deg');
 
-            // مكان عشوائي ثابت لا يتحرك يمين أو يسار
-            const posX = Math.random() * (window.innerWidth - 80);
-            const posY = Math.random() * (window.innerHeight - 80);
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 1000);
+            }, 40);
 
-            flower.style.left = `${posX}px`;
-            flower.style.top = `${posY}px`;
+            // توليد الورود الددوارة الثابتة
+            timer2 = setInterval(() => {
+                const fl = document.createElement('div');
+                fl.className = 'flower';
+                fl.innerHTML = '🌸';
+                fl.style.fontSize = (Math.random() * 30 + 25) + 'px';
+                fl.style.left = (Math.random() * (window.innerWidth - 50)) + 'px';
+                fl.style.top = (Math.random() * (window.innerHeight - 50)) + 'px';
+                
+                document.body.appendChild(fl);
+                setTimeout(() => fl.remove(), 1500);
+            }, 300);
+        });
 
-            const duration = Math.random() * 1.5 + 1; // مدة ظهورها ولفها واختفائها
-            flower.style.animationDuration = `${duration}s`;
-
-            document.body.appendChild(flower);
-
-            setTimeout(() => {
-                flower.remove();
-            }, duration * 1000);
-        }
-
-        btn.addEventListener('click', function
+        audio.addEventListener('ended', function() {
+            clearInterval(timer1);
+            clearInterval(timer2);
+            btn.style.background = '#ff4757';
+            btn.innerText = "Click Me! 💥";
+        });
+    </script>
+</body>
+</html>
