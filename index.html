@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>زر الصوت والخلفية</title>
+    <title>ديسكو الصوت 🕺🎶</title>
     <style>
         body {
-            /* خلفية بيضاء نفس الصورة */
-            background: #eef0f3; 
+            background: #111; /* خلفية سوداء بالبداية كأننا في نادي */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,18 +14,34 @@
             margin: 0;
             font-family: sans-serif;
             overflow: hidden;
-            position: relative;
+            transition: background 0.5s ease;
         }
 
-        /* تصميم النجوم في الخلفية */
-        .star {
-            position: absolute;
-            background-color: #1a2536; /* لون كحلي غامق نفس الصورة */
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            opacity: 0.85;
+        /* تأثير أنوار الديسكو المتحركة يمين ويسار */
+        @keyframes discoLights {
+            0% {
+                background: linear-gradient(90deg, #ff0055, #00ffcc, #ff00ff, #ffff00);
+                background-size: 400% 400%;
+                background-position: 0% 50%;
+            }
+            50% {
+                background: linear-gradient(90deg, #00ffff, #ff0055, #ffff00, #00ffcc);
+                background-size: 400% 400%;
+                background-position: 100% 50%;
+            }
+            100% {
+                background: linear-gradient(90deg, #ff0055, #00ffcc, #ff00ff, #ffff00);
+                background-size: 400% 400%;
+                background-position: 0% 50%;
+            }
         }
 
-        /* الزر الدائري في المنتصف */
+        /* كلاس الديسكو اللي يتفعل أول ما تضغط الزر */
+        body.disco-active {
+            animation: discoLights 1.5s infinite linear;
+        }
+
+        /* الزر الدائري */
         #soundBtn {
             width: 200px;
             height: 200px;
@@ -36,12 +51,12 @@
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
             font-weight: bold;
-            transition: background 0.3s ease, transform 0.1s ease;
+            transition: transform 0.1s ease;
             text-align: center;
             line-height: 1.2;
-            z-index: 10; /* عشان يصير الزر فوق النجوم وما يختفي تحتها */
+            z-index: 10;
         }
         #soundBtn:active {
             transform: scale(0.95);
@@ -50,16 +65,8 @@
 </head>
 <body>
 
-    <!-- خلفية النجوم (تتوزع تلقائياً) -->
-    <div class="star" style="top: 10%; left: 15%; width: 90px; height: 90px; transform: rotate(-15deg);"></div>
-    <div class="star" style="top: 12%; right: 12%; width: 65px; height: 65px; transform: rotate(10deg);"></div>
-    <div class="star" style="top: 40%; left: 8%; width: 85px; height: 85px; transform: rotate(25deg);"></div>
-    <div class="star" style="top: 35%; right: 18%; width: 75px; height: 75px; transform: rotate(-10deg);"></div>
-    <div class="star" style="bottom: 25%; left: 25%; width: 70px; height: 70px; transform: rotate(15deg);"></div>
-    <div class="star" style="bottom: 10%; right: 10%; width: 110px; height: 110px; transform: rotate(-20deg);"></div>
-
     <!-- الزر الدائري -->
-    <button id="soundBtn">اضغط هنا<br>للصوت 🎵</button>
+    <button id="soundBtn">اضغط للديسكو<br>والصوت 🕺</button>
 
     <!-- ملف الصوت -->
     <audio id="myAudio" src="anime ahh.mp3" preload="auto"></audio>
@@ -67,20 +74,27 @@
     <script>
         const btn = document.getElementById('soundBtn');
         const audio = document.getElementById('myAudio');
+        const body = document.body;
 
         btn.addEventListener('click', function() {
             audio.currentTime = 0;
+            
             audio.play().then(() => {
-                btn.style.background = '#2ed573'; // يقلب أخضر أثناء التشغيل
-                btn.innerText = "شغال... 🔊";
-            }).catch(function(error) {
-                console.error("تعذر تشغيل الصوت:", error);
+                // أول ما يشتغل الصوت، شغل أنوار الديسكو المتحركة
+                body.classList.add('disco-active');
+                btn.style.background = '#000000'; // يصير لون الزر أسود عشان تبرق الألوان حوله
+                btn.innerText = "الدوع شغال! 🎸";
+            }).catch(function'error', (error) => {
+                console.error("خطأ بالتشغيل:", error);
             });
         });
 
+        // أول ما ينتهي الصوت، تطفي أنوار الديسكو ويرجع الوضع طبيعي
         audio.addEventListener('ended', function() {
-            btn.style.background = '#ff4757'; // يرجع أحمر لما ينتهي
-            btn.innerText = "اضغط هنا\nللصوت 🎵";
+            body.classList.remove('disco-active');
+            body.style.background = '#111';
+            btn.style.background = '#ff4757';
+            btn.innerText = "اضغط للديسكو\nوالصوت 🕺";
         });
     </script>
 
