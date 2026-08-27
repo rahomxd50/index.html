@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Continuous Chaos Party</title>
+    <title>Extreme Chaos Party</title>
     <style>
         body {
             background: #111;
@@ -17,7 +17,6 @@
             position: relative;
         }
 
-        /* الزر الدائري في المنتصف */
         #soundBtn {
             width: 200px;
             height: 200px;
@@ -38,7 +37,7 @@
             transform: scale(0.95);
         }
 
-        /* الأشكال التي تتحرك بكل مكان بعشوائية */
+        /* الأشكال المتحركة السريعة في كل مكان */
         .chaos-shape {
             position: absolute;
             pointer-events: none;
@@ -47,25 +46,54 @@
 
         @keyframes moveAround {
             0% {
-                transform: translate(var(--start-x), var(--start-y)) rotate(0deg) scale(0.8);
+                transform: translate(var(--start-x), var(--start-y)) rotate(0deg) scale(0.5);
                 opacity: 0;
             }
-            20% {
+            15% {
                 opacity: 1;
             }
-            80% {
+            85% {
                 opacity: 1;
             }
             100% {
-                transform: translate(var(--end-x), var(--end-y)) rotate(var(--rot)) scale(1.2);
+                transform: translate(var(--end-x), var(--end-y)) rotate(var(--rot)) scale(1.5);
                 opacity: 0;
+            }
+        }
+
+        /* الورد الثابتة التي تلف في مكانها وتختفي */
+        .static-flower {
+            position: absolute;
+            pointer-events: none;
+            animation: flowerFadeRotate linear forwards;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes flowerFadeRotate {
+            0% {
+                opacity: 0;
+                transform: scale(0.2) rotate(0deg);
+            }
+            20% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(1) rotate(540deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.2) rotate(720deg);
             }
         }
     </style>
 </head>
 <body>
 
-    <button id="soundBtn">Click for Chaos<br>and Audio 💥</button>
+    <button id="soundBtn">Click for Extreme Chaos<br>and Audio 🌸💥</button>
 
     <audio id="myAudio" src="anime ahh.mp3" preload="auto"></audio>
 
@@ -73,42 +101,39 @@
         const btn = document.getElementById('soundBtn');
         const audio = document.getElementById('myAudio');
         let chaosInterval = null;
+        let flowerInterval = null;
 
         function spawnShape() {
             const shape = document.createElement('div');
             shape.classList.add('chaos-shape');
 
-            const type = Math.floor(Math.random() * 3); // 0: مربع، 1: مثلث، 2: نجمة
-            const size = Math.random() * 45 + 20; 
-            const colors = ['#ff0055', '#00ffcc', '#ff00ff', '#ffff00', '#00ffff', '#ff6b81', '#70a1ff'];
+            const type = Math.floor(Math.random() * 3);
+            const size = Math.random() * 50 + 25; 
+            const colors = ['#ff0055', '#00ffcc', '#ff00ff', '#ffff00', '#00ffff', '#ff6b81', '#70a1ff', '#ff9f43'];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
             shape.style.width = `${size}px`;
             shape.style.height = `${size}px`;
 
             if (type === 0) {
-                // مربع
                 shape.style.backgroundColor = randomColor;
-                shape.style.borderRadius = '4px';
+                shape.style.borderRadius = '6px';
             } else if (type === 1) {
-                // مثلث
                 shape.style.width = '0';
                 shape.style.height = '0';
                 shape.style.borderLeft = `${size / 2}px solid transparent`;
                 shape.style.borderRight = `${size / 2}px solid transparent`;
                 shape.style.borderBottom = `${size}px solid ${randomColor}`;
             } else {
-                // نجمة
                 shape.style.backgroundColor = randomColor;
                 shape.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
             }
 
-            // إحداثيات ظهور عشوائية من أي مكان بالشاشة وانطلاقها لكل مكان
             const startX = Math.random() * window.innerWidth;
             const startY = Math.random() * window.innerHeight;
-            const endX = startX + (Math.random() - 0.5) * window.innerWidth * 1.5;
-            const endY = startY + (Math.random() - 0.5) * window.innerHeight * 1.5;
-            const rotation = Math.random() * 1080 - 540; // دوران مجنون
+            const endX = startX + (Math.random() - 0.5) * window.innerWidth * 1.8;
+            const endY = startY + (Math.random() - 0.5) * window.innerHeight * 1.8;
+            const rotation = Math.random() * 1440 - 720; 
 
             shape.style.setProperty('--start-x', `${startX}px`);
             shape.style.setProperty('--start-y', `${startY}px`);
@@ -116,42 +141,40 @@
             shape.style.setProperty('--end-y', `${endY}px`);
             shape.style.setProperty('--rot', `${rotation}deg`);
 
-            const duration = Math.random() * 1.5 + 1; // سرعة الحركة
+            // حركة أسرع بكثير
+            const duration = Math.random() * 0.6 + 0.4; 
             shape.style.animationDuration = `${duration}s`;
 
             document.body.appendChild(shape);
 
-            // حذف الشكل بعد انتهاء حركته لتنظيف الذاكرة
             setTimeout(() => {
                 shape.remove();
             }, duration * 1000);
         }
 
-        btn.addEventListener('click', function() {
-            audio.currentTime = 0;
-            
-            audio.play().then(() => {
-                btn.style.background = '#2ed573';
-                btn.innerText = "Partying! 🔥";
+        function spawnFlower() {
+            const flower = document.createElement('div');
+            flower.classList.add('static-flower');
+            flower.innerHTML = '🌸'; // إيموجي وردة جميلة
 
-                // إذا كان فيه حلقة قديمة شغالّة نلغيها عشان ما تتلخبط
-                if (chaosInterval) clearInterval(chaosInterval);
+            const size = Math.random() * 30 + 30; // حجم الوردة
+            flower.style.fontSize = `${size}px`;
 
-                // استمرار توليد الأشكال بعشوائية طول فترة تشغيل الأغنية (كل 100 ميلي ثانية شكل جديد)
-                chaosInterval = setInterval(spawnShape, 100);
+            // مكان عشوائي ثابت لا يتحرك يمين أو يسار
+            const posX = Math.random() * (window.innerWidth - 80);
+            const posY = Math.random() * (window.innerHeight - 80);
 
-            }).catch(function(error) {
-                console.error("Playback error:", error);
-            });
-        });
+            flower.style.left = `${posX}px`;
+            flower.style.top = `${posY}px`;
 
-        // أول ماتخلص الأغنية يوقف توليد الأشكال ويرجع الزر لوضعه الطبيعي
-        audio.addEventListener('ended', function() {
-            clearInterval(chaosInterval);
-            btn.style.background = '#ff4757';
-            btn.innerText = "Click for Chaos\nand Audio 💥";
-        });
-    </script>
+            const duration = Math.random() * 1.5 + 1; // مدة ظهورها ولفها واختفائها
+            flower.style.animationDuration = `${duration}s`;
 
-</body>
-</html>
+            document.body.appendChild(flower);
+
+            setTimeout(() => {
+                flower.remove();
+            }, duration * 1000);
+        }
+
+        btn.addEventListener('click', function
