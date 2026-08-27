@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disco Sound Button</title>
+    <title>Chaos Party Sound</title>
     <style>
         body {
             background: #111;
@@ -14,32 +14,10 @@
             margin: 0;
             font-family: Arial, sans-serif;
             overflow: hidden;
-            transition: background 0.5s ease;
+            position: relative;
         }
 
-        /* تأثير أنوار الديسكو المتحركة يمين ويسار */
-        @keyframes discoLights {
-            0% {
-                background: linear-gradient(90deg, #ff0055, #00ffcc, #ff00ff, #ffff00);
-                background-size: 400% 400%;
-                background-position: 0% 50%;
-            }
-            50% {
-                background: linear-gradient(90deg, #00ffff, #ff0055, #ffff00, #00ffcc);
-                background-size: 400% 400%;
-                background-position: 100% 50%;
-            }
-            100% {
-                background: linear-gradient(90deg, #ff0055, #00ffcc, #ff00ff, #ffff00);
-                background-size: 400% 400%;
-                background-position: 0% 50%;
-            }
-        }
-
-        body.disco-active {
-            animation: discoLights 1.5s infinite linear;
-        }
-
+        /* الزر الدائري */
         #soundBtn {
             width: 200px;
             height: 200px;
@@ -54,41 +32,115 @@
             transition: transform 0.1s ease, background 0.3s ease;
             text-align: center;
             line-height: 1.3;
-            z-index: 10;
+            z-index: 100;
         }
         #soundBtn:active {
             transform: scale(0.95);
+        }
+
+            /* الأشكال العشوائية (نجوم، مربعات، مثلثات) اللي تطير برا الشاشة */
+        .chaos-shape {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            pointer-events: none;
+            animation: explode 1.2s forwards ease-out;
+        }
+
+        /* حركة الطيران العشوائي والدوران والخروج برا الشاشة */
+        @keyframes explode {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--end-x), var(--end-y)) scale(1.5) rotate(var(--rot));
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <button id="soundBtn">Click for Disco<br>and Audio 🕺</button>
+    <button id="soundBtn">Click for Chaos<br>and Audio 💥</button>
 
     <audio id="myAudio" src="anime ahh.mp3" preload="auto"></audio>
 
     <script>
         const btn = document.getElementById('soundBtn');
         const audio = document.getElementById('myAudio');
-        const body = document.body;
+
+        function createChaos() {
+            // عدد الأشكال اللي تنرمي بكل ضغطة (فوضى عارمة)
+            const totalShapes = 40;
+            const colors = ['#ff0055', '#00ffcc', '#ff00ff', '#ffff00', '#00ffff', '#ff6b81', '#70a1ff'];
+
+            for (let i = 0; i < totalShapes; i++) {
+                const shape = document.createElement('div');
+                shape.classList.add('chaos-shape');
+
+                // اختيار عشوائي للشكل (مربع، مثلث، أو نجمة)
+                const type = Math.floor(Math.random() * 3);
+                const size = Math.random() * 40 + 20; // حجم عشوائي
+                shape.style.width = `${size}px`;
+                shape.style.height = `${size}px`;
+                shape.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                if (type === 0) {
+                    // مربع
+                    shape.style.borderRadius = '0%';
+                } else if (type === 1) {
+                    // مثلث
+                    shape.style.backgroundColor = 'transparent';
+                    shape.style.width = '0';
+                    shape.style.height = '0';
+                    shape.style.borderLeft = `${size / 2}px solid transparent`;
+                    shape.style.borderRight = `${size / 2}px solid transparent`;
+                    shape.style.borderBottom = `${size}px solid ${colors[Math.floor(Math.random() * colors.length)]}`;
+                } else {
+                    // نجمة
+                    shape.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+                }
+
+                // إحداثيات عشوائية تخلي الأشكال تروح برا الشاشة تماماً بكل الاتجاهات
+                const destinationX = (Math.random() - 0.5) * window.innerWidth * 1.5;
+                const destinationY = (Math.random() - 0.5) * window.innerHeight * 1.5;
+                const rotation = Math.random() * 720 - 360; // دوران عشوائي سريع
+
+                shape.style.setProperty('--end-x', `${destinationX}px`);
+                shape.style.setProperty('--end-y', `${destinationY}px`);
+                shape.style.setProperty('--rot', `${rotation}deg`);
+
+                // مدة الحركة عشوائية عشان تصير فوضى حقيقية
+                const duration = Math.random() * 0.6 + 0.8;
+                shape.style.animationDuration = `${duration}s`;
+
+                document.body.appendChild(shape);
+
+                // حذف العنصر بعد ما يخلص الحركة عشان ما يعلق الموقع
+                setTimeout(() => {
+                    shape.remove();
+                }, duration * 1000);
+            }
+        }
 
         btn.addEventListener('click', function() {
             audio.currentTime = 0;
             
             audio.play().then(() => {
-                body.classList.add('disco-active');
-                btn.style.background = '#000000';
-                btn.innerText = "Playing... 🔊";
+                btn.style.background = '#2ed573';
+                btn.innerText = "Chaos! 🔥";
+                
+                // إطلاق الفوضى والأشكال الطائرة
+                createChaos();
             }).catch(function(error) {
                 console.error("Playback error:", error);
             });
         });
 
         audio.addEventListener('ended', function() {
-            body.classList.remove('disco-active');
-            body.style.background = '#111';
             btn.style.background = '#ff4757';
-            btn.innerText = "Click for Disco\nand Audio 🕺";
+            btn.innerText = "Click for Chaos\nand Audio 💥";
         });
     </script>
 
