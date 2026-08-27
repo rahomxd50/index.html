@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ديسكو الصوت 🕺🎶</title>
+    <title>Disco Sound Button</title>
     <style>
         body {
-            background: #111; /* خلفية سوداء بالبداية كأننا في نادي */
+            background: #111;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: sans-serif;
+            font-family: Arial, sans-serif;
             overflow: hidden;
             transition: background 0.5s ease;
         }
@@ -36,16 +36,14 @@
             }
         }
 
-        /* كلاس الديسكو اللي يتفعل أول ما تضغط الزر */
         body.disco-active {
             animation: discoLights 1.5s infinite linear;
         }
 
-        /* الزر الدائري */
         #soundBtn {
             width: 200px;
             height: 200px;
-            font-size: 24px;
+            font-size: 22px;
             background: #ff4757;  
             color: white;
             border: none;
@@ -53,9 +51,9 @@
             cursor: pointer;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
             font-weight: bold;
-            transition: transform 0.1s ease;
+            transition: transform 0.1s ease, background 0.3s ease;
             text-align: center;
-            line-height: 1.2;
+            line-height: 1.3;
             z-index: 10;
         }
         #soundBtn:active {
@@ -65,10 +63,8 @@
 </head>
 <body>
 
-    <!-- الزر الدائري -->
-    <button id="soundBtn">اضغط للديسكو<br>والصوت 🕺</button>
+    <button id="soundBtn">Click for Disco<br>and Audio 🕺</button>
 
-    <!-- ملف الصوت -->
     <audio id="myAudio" src="anime ahh.mp3" preload="auto"></audio>
 
     <script>
@@ -80,21 +76,19 @@
             audio.currentTime = 0;
             
             audio.play().then(() => {
-                // أول ما يشتغل الصوت، شغل أنوار الديسكو المتحركة
                 body.classList.add('disco-active');
-                btn.style.background = '#000000'; // يصير لون الزر أسود عشان تبرق الألوان حوله
-                btn.innerText = "الدوع شغال! 🎸";
-            }).catch(function'error', (error) => {
-                console.error("خطأ بالتشغيل:", error);
+                btn.style.background = '#000000';
+                btn.innerText = "Playing... 🔊";
+            }).catch(function(error) {
+                console.error("Playback error:", error);
             });
         });
 
-        // أول ما ينتهي الصوت، تطفي أنوار الديسكو ويرجع الوضع طبيعي
         audio.addEventListener('ended', function() {
             body.classList.remove('disco-active');
             body.style.background = '#111';
             btn.style.background = '#ff4757';
-            btn.innerText = "اضغط للديسكو\nوالصوت 🕺";
+            btn.innerText = "Click for Disco\nand Audio 🕺";
         });
     </script>
 
