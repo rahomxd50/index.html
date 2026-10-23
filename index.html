@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>أمي، أجمل نعمة في حياتي ❤️</title>
+<style>
+:root{--rose:#f5c9ce;--wine:#6b2638;--gold:#f5e3c0}*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Tahoma,Arial,serif;color:#fff7f0}html{height:100%;overflow-x:hidden;overflow-y:auto;scroll-behavior:smooth}
+body{min-height:100svh;display:flex;align-items:center;justify-content:center;overflow-x:hidden;overflow-y:auto;padding:28px 0;background:#1b1110}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(145deg,rgba(25,13,13,.42),rgba(43,19,27,.52) 55%,rgba(10,9,12,.48));z-index:0}
+.glow{position:fixed;width:45vmax;height:45vmax;border-radius:50%;background:rgba(222,130,148,.12);filter:blur(70px);top:-20vmax;right:-10vmax;pointer-events:none}
+.card{position:relative;z-index:1;flex:0 0 auto;width:min(680px,calc(100% - 30px));margin:12px auto;padding:clamp(28px,6vw,58px) clamp(22px,6vw,62px);text-align:center;border:1px solid rgba(255,230,215,.35);border-radius:5px 5px 26px 26px;background:linear-gradient(140deg,rgba(50,27,27,.65),rgba(31,20,24,.58));box-shadow:0 24px 90px #0008;backdrop-filter:blur(3px);animation:arrive 1.5s ease both}
+@keyframes arrive{from{opacity:0;transform:translateY(15px) scale(.985)}to{opacity:1;transform:none}}
+.eyebrow{font:11px/1.5 Arial,sans-serif;letter-spacing:.04em;color:#f0c9cb;margin-bottom:22px}
+.rose{font-size:clamp(40px,8vw,64px);line-height:1;margin-bottom:17px;filter:drop-shadow(0 5px 15px #eaa0a755);animation:sway 5s ease-in-out infinite;display:inline-block}
+@keyframes sway{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(5deg) translateY(-5px)}}
+h1{font-size:clamp(32px,7vw,58px);font-weight:400;line-height:1.13;letter-spacing:-.025em;margin:0 auto 20px;color:#fff3e9;text-shadow:0 3px 25px #f5c9ce35}
+h1 em{font-weight:400;color:#f0c2ca}
+.message{max-width:480px;margin:0 auto;color:#f4e4df;font-size:clamp(16px,3.3vw,20px);line-height:1.85}
+.rule{width:65px;height:1px;background:linear-gradient(90deg,transparent,#e9b8bd,transparent);margin:26px auto}
+.signature{font-style:italic;color:#eac3c8;font-size:17px;margin-top:20px}
+#loveReveal{max-width:500px;margin:24px auto 0;padding:20px 22px;border:1px solid #e9c0c455;border-radius:18px;background:rgba(255,238,235,.07);color:#fff0ed;font-size:17px;line-height:1.85;white-space:normal;min-height:80px;animation:softIn .5s ease}
+@keyframes softIn{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}
+.actions{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px}
+button{font:11px Arial,sans-serif;letter-spacing:0;padding:14px 20px;border-radius:30px;cursor:pointer;transition:transform .2s,background .2s;color:#fff6f1;border:1px solid #e9c0c47a;background:#ffffff0d}
+button:hover{transform:translateY(-2px);background:#ffffff1c}button.primary{background:linear-gradient(135deg,#9b5265,#6d2e42);border-color:#e6b3bd80;box-shadow:0 8px 28px #3d172955}
+#petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2}.petal{position:absolute;bottom:-35px;opacity:0;color:#f5d1d5;text-shadow:0 0 12px #f3c0ca;animation:floatUp linear forwards;font-size:16px}@keyframes floatUp{0%{transform:translate(0,0) rotate(0deg);opacity:0}12%{opacity:.8}85%{opacity:.6}100%{transform:translate(var(--drift),-115vh) rotate(280deg);opacity:0}}
+#toast{min-height:22px;margin-top:15px;color:#edc9ce;font:12px Arial,sans-serif;letter-spacing:.05em}
+@media(max-width:480px){.card{padding:30px 20px}.eyebrow{letter-spacing:.22em}button{padding:13px 16px}}
+</style></head>
+<body><div class="glow"></div><div id="petals" aria-hidden="true"></div>
+<main class="card">
+<div class="eyebrow">رسالة صغيرة لأغلى أم</div>
+<div class="rose" aria-hidden="true">🌹</div>
+<h1>في كل حكايات الدنيا،<br><em>أنتِ أجمل نعمة يا أمي.</em></h1>
+<div class="rule"></div>
+<p class="message">يا أمي، مهما كبرت ومهما أخذتني الأيام، سيبقى حبك وأمانك أجمل شيء في حياتي. شكرًا لكل تعبك وحنانك ودعواتك، ولكل مرة كنتِ فيها سندي حتى من غير ما أطلب. الله يخليكِ لي ويقدرني أرد لك ولو جزءًا بسيطًا من فضلك. أحبك يا أمي ❤️</p>
+<div class="signature">ابنك يحبك أكثر مما تستطيع الكلمات أن تقول ❤️</div>
+<div id="loveReveal" aria-live="polite" hidden></div>
+<div class="actions"><button class="primary" id="reveal">رسالة أخرى لأمي ❤️</button><button id="music">▶ شغّلي أغنية أمي</button></div>
+<div id="toast" aria-live="polite"></div>
+<audio id="song" loop preload="metadata"><source src="./song.mp3" type="audio/mpeg"></audio>
+</main>
+<script>
+const petals=document.getElementById('petals');let petalTimer;
+function makePetal(){const p=document.createElement('span');p.className='petal';p.textContent=['♡','✧','❀','♥'][Math.floor(Math.random()*4)];p.style.left=Math.random()*100+'vw';p.style.setProperty('--drift',(Math.random()*180-90)+'px');p.style.animationDuration=(8+Math.random()*8)+'s';p.style.fontSize=(12+Math.random()*13)+'px';petals.appendChild(p);setTimeout(()=>p.remove(),17000)}
+function startPetals(){if(petalTimer)return;for(let i=0;i<12;i++)setTimeout(makePetal,i*220);petalTimer=setInterval(makePetal,850)}startPetals();
+const loveNotes = [
+  'يا أمي، أحبك لأنك بيتي وأماني، ولأن وجودك يجعل الدنيا أهون وأجمل. ❤️',
+  'شكرًا لكل مرة تعبتِ فيها عشاني، ولكل دعوة حلوة خبّيتيها لي في قلبك. الله يحفظك لي.',
+  'مهما قلت لك أحبك، تبقى الكلمات أقل من حقك. أنتِ نعمة أحمد الله عليها كل يوم. 🌷',
+  'أتمنى أقدر أفرحك مثل ما فرّحتِ أيامي، وأكون لك سندًا مثل ما كنتِ دائمًا سندي.',
+  'يا أمي، ضحكتك عندي بالدنيا، وراحتك تهمني، وأتمنى أشوفك دائمًا بخير وسعادة. ❤️',
+  'يمكن ما أقولها كل يوم، لكني ممتن لكل شيء تسوينه عشاني، حتى الأشياء الصغيرة اللي يمكن ما أنتبه لها.',
+  'حضنك أمان، وصوتك طمأنينة، ودعواتك من أجمل الهدايا اللي أعيش عليها. الله لا يحرمني منك.',
+  'أنتِ مو بس أمي؛ أنتِ الحنان والصبر والقلب اللي يتمنى لي الخير دائمًا. أحبك كثيرًا. 💐',
+  'إذا قصّرت يوم في التعبير عن حبي، تذكري أن مكانك في قلبي كبير وما يشبهه أحد.',
+  'يا رب أعطِ أمي من الفرح أضعاف ما أعطتني، ومن الراحة بقدر كل تعب تحملته من أجلي.',
+  'أجمل نجاح عندي أن أشوفك فخورة ومبتسمة، وأجمل هدية أقدر أعطيك إياها أن أكون بخير.',
+  'شكرًا يا أمي على حنانك وصبرك، وعلى أنك تحاولين دائمًا تجعلين حياتي أفضل. أحبك من قلبي. ❤️',
+  'أدري أن كلمة شكرًا ما تكفي، لكني أقولها من أعماقي: شكرًا لأنك أمي.',
+  'أتمنى تكون أيامك مليانة راحة وضحك وأخبار حلوة، مثل ما تتمنين لي دائمًا كل الخير.',
+  'يا أمي، مهما كبرت سأظل أحتاج دعواتك وحنانك، وسأظل أحبك بكل قلبي. 🤍',
+  'كل يوم معك نعمة، وكل ذكرى حلوة بيننا شيء غالي أحتفظ فيه بقلبي.',
+  'إذا كان للحب شكل، فهو تعبك عشاني واهتمامك بي وخوفك عليّ. الله يسعد قلبك يا أمي.',
+  'أبيك تعرفين أن كل شيء تسوينه له قيمة عندي، حتى لو ما عرفت أعبّر عنها وقتها.',
+  'يا أغلى الناس، الله يطوّل بعمرك على الصحة والعافية، ويجعل أيامك كلها طمأنينة وفرحًا.',
+  'أحبك يا أمي، مو لأنك تعطيني كل شيء، بل لأن قلبك وحنانك من أجمل الأشياء في حياتي. ❤️'
+];
+let lastNote = -1;
+document.getElementById('reveal').addEventListener('click',()=>{
+ const box=document.getElementById('loveReveal');let n;
+ do{n=Math.floor(Math.random()*loveNotes.length)}while(n===lastNote);lastNote=n;
+ box.hidden=false;box.style.animation='none';void box.offsetWidth;box.style.animation='softIn .5s ease';box.textContent=loveNotes[n];
+ document.getElementById('toast').textContent='رسالة حب صغيرة لأغلى أم ❤️';
+ for(let i=0;i<24;i++)setTimeout(makePetal,i*65);
+ box.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+const song=document.getElementById('song'),music=document.getElementById('music');music.addEventListener('click',async()=>{try{if(song.paused){await song.play();music.textContent='Ⅱ إيقاف الأغنية'}else{song.pause();music.textContent='▶ شغّلي أغنية أمي'}document.getElementById('toast').textContent='';}catch(e){document.getElementById('toast').textContent='تعذّر تشغيل الأغنية. تأكدي أن ملف song.mp3 بجانب صفحة HTML.'}});
+</script></body></html>
